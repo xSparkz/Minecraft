@@ -2,34 +2,33 @@
 
 proc(_writeUTF, @ba, @str,
 
-	@len = length(@str)
+	@len = length(@str) # Length of string
 	
 	if (@len > 200) {
-		die('String too long')
+		die('String too long');
 	}
 	
-	ba_put_byte(@ba, 0)
-	ba_put_byte(@ba, @len)
-	ba_put_bytes(@ba, string_get_bytes(@str, 'ascii'))
+	ba_put_byte(@ba, 0);
+	ba_put_byte(@ba, @len);
+	ba_put_bytes(@ba, string_get_bytes(@str, 'ascii'));
 )
 
 proc(_writeShort, @ba, @int,
 
-	ba_put_short(@ba, @int)
+	ba_put_short(@ba, @int);
 
 )
 
 proc(_writeLength, @ba, @str,
 
-	@length = length(@str)
-	
-	_writeShort(@ba, @length)
+	@length = length(@str);	
+	_writeShort(@ba, @length);
 
 )
 
 proc(_forward, @server, @message,
 
-	@ba = byte_array()
+	@ba = byte_array(); # Create a new byte array
 	
 	_writeUTF(@ba, 'Forward') # Tell bungee to forward the message
 	_writeUTF(@ba, @server) # The server we are sending the message to, can be ALL or ONLINE, or custom
@@ -44,12 +43,12 @@ proc(_forward, @server, @message,
  
 proc(_changeserver, @player, @server,
 
-       @ba = byte_array()
+       @ba = byte_array(); # Create a new byte array
 	   
-       _writeUTF(@ba, 'Connect')
-       _writeUTF(@ba, @server)      
+       _writeUTF(@ba, 'Connect');
+       _writeUTF(@ba, @server);  
 	   
-       send_plugin_message(@player, 'BungeeCord', @ba)
+       send_plugin_message(@player, 'BungeeCord', @ba); # Send a message to the BungeeCord plugin
 )
 
 
@@ -71,7 +70,7 @@ register_command(changeserver,
 			
 			}
 			
-			_changeserver(player(), @args[0]);
+			_changeserver(player(), @args[0]); 
                 
         }
     )
@@ -112,12 +111,12 @@ register_command(sendtoserver,
 				@plr = player(@args[0])
 				@svr = @args[1]
 				
-				set_ploc(@plr, array(x:'0', y:'70', z:'-1'))
+				set_ploc(@plr, array(x:'0', y:'70', z:'-1')); # Sloppy methd of teleporting player before server change to avoid issues teleporting back. Hardcoding is bad!
 				_changeserver(@plr, @svr);
 				
 			} catch (PlayerOfflineException @ErrorInfo) {				
-				msg('Player is Offline')
-				die()
+				msg('Player is Offline');
+				die();
 			}				
                 
                 
